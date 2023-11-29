@@ -2,6 +2,9 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 
+import random
+from phrases import PHRASES
+
 
 router = Router()
 
@@ -13,4 +16,4 @@ async def start_handler(msg: Message):
 
 @router.message()
 async def message_handler(msg: Message):
-    await msg.answer(f"{msg.from_user.first_name}, ты сегодня молодец!")
+    await msg.answer(f"{msg.from_user.first_name}, {random.choice(PHRASES)}")
