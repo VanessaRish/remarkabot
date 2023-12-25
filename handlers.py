@@ -11,6 +11,7 @@ router = Router()
 
 @router.message(Command("start"))
 async def start_handler(msg: Message):
+    print(msg.chat.id)
     await msg.answer(f"Привет {msg.from_user.full_name}!")
 
 
