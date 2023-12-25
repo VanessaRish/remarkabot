@@ -1,0 +1,9 @@
+version: '3'
+services:
+  remarkabot:
+    build: .
+    restart: always
+    environment:
+      - TELEGRAM_BOT_TOKEN=your_token_here
+    ports:
+      - "8080:80"
