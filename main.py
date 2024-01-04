@@ -9,15 +9,17 @@ from aiogram import types
 
 import config
 from handlers import router
+from db_setup import users_collection
 
 
 async def send_daily_message(bot, msg: types.Message):
+    users = users_collection.find()
     message_content = "Привет! Расскажи, как прошел сегодня твой день?"
-    await bot.send_message(100563858, message_content)
+    for user in users:
+        await bot.send_message(user["chat_id"], message_content)
 
 
 def _send_daily_message(bot, msg: types.Message):
-    print("running...")
     asyncio.create_task(send_daily_message(bot, msg))
 
 
@@ -31,7 +33,6 @@ async def main():
     )
 
     schedule.every().day.at("20:00").do(_send_daily_message, bot, types.Message)
-
     while True:
         schedule.run_pending()
         await asyncio.sleep(1)
