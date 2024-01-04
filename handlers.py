@@ -1,10 +1,10 @@
+import logging
+
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 
-import random
-from phrases import PHRASES
-from db_setup import users_collection
+from db_setup import users_collection, phrases_collection
 
 
 router = Router()
@@ -22,8 +22,7 @@ async def start_handler(msg: Message):
 
     if existing_user:
         users_collection.update_one(
-            {"user_id": user_info["user_id"]},
-            {"$set": {"status": "active"}}
+            {"user_id": user_info["user_id"]}, {"$set": {"status": "active"}}
         )
         await msg.reply("Я рада, что ты вернулась!")
     else:
@@ -33,4 +32,6 @@ async def start_handler(msg: Message):
 
 @router.message()
 async def message_handler(msg: Message):
-    await msg.answer(f"{msg.from_user.first_name}, {random.choice(PHRASES)}")
+    await msg.answer(
+        f'{msg.from_user.first_name}, {next(phrases_collection.aggregate([{"$sample": {"size": 1}}]), {}).get("phrase")}'
+    )
