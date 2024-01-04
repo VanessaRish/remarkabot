@@ -9,15 +9,17 @@ from aiogram import types
 
 import config
 from handlers import router
+from db_setup import users_collection, migrate_phrases
 
 
 async def send_daily_message(bot, msg: types.Message):
+    users = users_collection.find()
     message_content = "Привет! Расскажи, как прошел сегодня твой день?"
-    await bot.send_message(100563858, message_content)
+    for user in users:
+        await bot.send_message(user["chat_id"], message_content)
 
 
 def _send_daily_message(bot, msg: types.Message):
-    print("running...")
     asyncio.create_task(send_daily_message(bot, msg))
 
 
@@ -25,6 +27,7 @@ async def main():
     bot = Bot(config.TOKEN, parse_mode=ParseMode.HTML)
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_router(router)
+    migrate_phrases()
     await bot.delete_webhook(drop_pending_updates=True)
     asyncio.create_task(
         dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())

@@ -7,3 +7,13 @@ services:
       - TELEGRAM_BOT_TOKEN=your_token_here
     ports:
       - "8080:80"
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongoremarkabot:/data/db
+
+volumes:
+  mongoremarkabot:
