@@ -5,6 +5,7 @@ from aiogram.types import Message
 from aiogram.filters import Command
 
 from db_setup import users_collection, phrases_collection
+from chatgpt import get_generated_phrase
 
 
 router = Router()
@@ -32,6 +33,12 @@ async def start_handler(msg: Message):
 
 @router.message()
 async def message_handler(msg: Message):
-    await msg.answer(
-        f'{msg.from_user.first_name}, {next(phrases_collection.aggregate([{"$sample": {"size": 1}}]), {}).get("phrase")}'
-    )
+    try:
+        generated_answer = await get_generated_phrase()
+        await msg.answer(f'{msg.from_user.first_name}, {generated_answer}')
+    except Exception as e:
+        logging.debug(f"Failed getting answer from chatgpt.")
+        logging.error(e)
+        await msg.answer(
+            f'{msg.from_user.first_name}, {next(phrases_collection.aggregate([{"$sample": {"size": 1}}]), {}).get("phrase")}'
+        )

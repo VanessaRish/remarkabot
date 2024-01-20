@@ -6,4 +6,5 @@ COPY . /app
 RUN poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
 EXPOSE 80
 ENV TELEGRAM_BOT_TOKEN=""
-CMD python3 main.py ${TELEGRAM_BOT_TOKEN}
+ENV OPENAI_TOKEN=""
+CMD python3 main.py ${TELEGRAM_BOT_TOKEN} ${OPENAI_TOKEN}

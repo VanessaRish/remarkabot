@@ -5,6 +5,7 @@ services:
     restart: always
     environment:
       - TELEGRAM_BOT_TOKEN=your_token_here
+      - OPENAI_TOKEN=your_token_here
     ports:
       - "8080:80"
 
