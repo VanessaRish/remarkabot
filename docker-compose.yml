@@ -7,6 +7,10 @@ services:
       - TELEGRAM_BOT_TOKEN=your_token_here
     ports:
       - "8080:80"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./gpt:/gpt
 
   mongodb:
     image: mongo
