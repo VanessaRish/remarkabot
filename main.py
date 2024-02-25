@@ -10,6 +10,7 @@ from aiogram import types
 import config
 from handlers import router
 from db_setup import users_collection, migrate_phrases
+from gpt_model import GPT
 
 
 async def send_daily_message(bot, msg: types.Message):
@@ -32,8 +33,8 @@ async def main():
     asyncio.create_task(
         dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
     )
-
     schedule.every().day.at("20:00").do(_send_daily_message, bot, types.Message)
+    # schedule.every(1).minute.do(_send_daily_message, bot, types.Message)
 
     while True:
         schedule.run_pending()
