@@ -36,7 +36,7 @@ async def start_handler(msg: Message):
 @router.message()
 async def message_handler(msg: Message):
     try:
-        generated_answer = gpt_client.get_answer(content)
+        generated_answer = gpt_client.get_answer(content).strip('"')
         await msg.answer(f'{msg.from_user.first_name}, {generated_answer}')
     except Exception as e:
         logging.debug(f"Failed getting answer from chatgpt.")
